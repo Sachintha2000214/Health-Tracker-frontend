@@ -22,8 +22,20 @@ const BloodPressure = () => {
         userId
       });
       setMessage("data saved successfully!");
+      setSystolic("");
+      setDiastolic("");
+      setPulse("");
+      setFile(null);
+  
+      // Clear message after 3 seconds
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     } catch (error) {
       setMessage("Error saving data.");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     }
   };
 
@@ -56,8 +68,15 @@ const BloodPressure = () => {
       });
 
       setMessage(`PDF processed successfully: ${JSON.stringify(response.data.message)}`);
+      setFile("")
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     }
   };
 

@@ -25,8 +25,19 @@ const LipidProfile = () => {
           triglycerides
         });
         setMessage("Manual data saved successfully!");
+        setCholesterol("");
+        setLdl("");
+        setHdl("");
+        setTriglycerides("");
+        setFile("")
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
       } catch (error) {
         setMessage("Error saving manual data.");
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
       }
     };
 
@@ -59,8 +70,16 @@ const LipidProfile = () => {
         });
   
         setMessage(`PDF processed successfully: ${JSON.stringify(response.data.message)}`);
+        setFile("")
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
       } catch (error) {
         setMessage(`Error: ${error.message}`);
+        setFile("")
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
       }
     };
 

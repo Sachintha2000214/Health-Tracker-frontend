@@ -26,8 +26,19 @@ const FBC = () => {
         platelet,
       });
       setMessage("FBC data saved successfully!");
+      setRbc("");
+      setWbc("");
+      setHemoglobin("");
+      setPlatelet("");
+      setFile(null);
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     } catch (error) {
       setMessage("Error saving FBC data.");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     }
   };
 
@@ -60,8 +71,16 @@ const FBC = () => {
       });
 
       setMessage(`PDF processed successfully: ${JSON.stringify(response.data.message)}`);
+      setFile("")
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
+      setFile("")
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     }
   };
 

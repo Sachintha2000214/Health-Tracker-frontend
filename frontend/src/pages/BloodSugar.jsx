@@ -27,8 +27,18 @@ const BloodSugar = () => {
         value: value,
       });
       setMessage("Manual data saved successfully!");
+      setTestType("");
+      setTestValue("");  
+      setFile(null)
+      // Clear message after 3 seconds
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     } catch (error) {
       setMessage("Error saving manual data.");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     }
   };
 
@@ -61,8 +71,15 @@ const BloodSugar = () => {
       });
 
       setMessage(`PDF processed successfully: ${JSON.stringify(response.data.message)}`);
+      setFile("")
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     }
   };
 
