@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import img1 from "../assets/img/bloodpressure.png";
 
 const BloodPressure = () => {
   const [activeTab, setActiveTab] = useState("manual");
@@ -86,7 +87,10 @@ const BloodPressure = () => {
             Upload PDF
           </button>
         </div>
-
+            <img 
+              src={img1} 
+              className="mx-auto w-1/4" 
+            />
         {/* Manual Entry Form */}
         {activeTab === "manual" && (
           <form onSubmit={handleManualSubmit} className="space-y-3">

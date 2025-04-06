@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import img1 from "../assets/img/lipidprofile.png"
 
 const LipidProfile = () => {
     const [activeTab, setActiveTab] = useState("manual");
@@ -84,6 +85,13 @@ const LipidProfile = () => {
           >
             Upload PDF
           </button>
+        </div>
+        <div>
+          <br/>
+           <img 
+          src={img1} 
+          className="mx-auto w-1/4" 
+           />
         </div>
   
         {/* Tab Content */}
