@@ -6,6 +6,7 @@ import Register from "./pages/Register"
 import Welcome from "./pages/Welcome";
 import UserLogin from "./pages/UserLogin";
 import UserRegister from "./pages/UserRegister";
+
 import BloodPressure from "./pages/BloodPressure";
 import BloodSugar from "./pages/BloodSugar";
 import FBC from "./pages/FBC";
@@ -14,7 +15,9 @@ import Others from "./pages/Others";
 import HealthTracker from "./pages/HealthTracker"
 import DoctorDashboard from "./pages/DoctorDashboard";
 import PrescribedDrugs from "./pages/PrescribedDrugsPage";
-
+import MealTracker from "./pages/MealTracker";
+import BMICalculator from "./pages/BMICalculator";
+import CalorieCalculator from "./pages/CalorieCalculator";
 
 const App = () => {
   return (
@@ -34,6 +37,10 @@ const App = () => {
       <Route path='/others' element={<Others/>}/>
       <Route path='/docdashboard' element={<DoctorDashboard/>}/>
       <Route path='/pdrug' element={<PrescribedDrugs/>}/>
+      <Route path='/mealtracker' element={<MealTracker/>}/>
+      <Route path='/bmiCal' element={<BMICalculator/>}/>
+      <Route path='/bmiCal' element={<BMICalculator/>}/>
+      <Route path='/caloriesCal' element={<CalorieCalculator/>}/>
 
 
     </Routes>
