@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
+import img1 from "../assets/img/fbc.png"
 
 const FBC = () => {
   const [activeTab, setActiveTab] = useState("manual"); // Active tab
   const [rbc, setRbc] = useState("");
   const [wbc, setWbc] = useState("");
-  const [hemoglobin, setHemoglobin] = useState("");
+  const [haemoglobin, sethaemoglobin] = useState("");
   const [platelet, setPlatelet] = useState("");
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
@@ -22,7 +23,7 @@ const FBC = () => {
         userId,
         rbc,
         wbc,
-        hemoglobin,
+        haemoglobin,
         platelet,
       });
       setMessage("FBC data saved successfully!");
@@ -86,6 +87,14 @@ const FBC = () => {
           Upload PDF
         </button>
       </div>
+      <div>
+       <br/>
+       <img 
+       src={img1} 
+      className="mx-auto w-1/4" 
+        />
+     </div>
+        
 
       {/* Tab Content */}
       <div className="tab-content mt-4">
@@ -117,13 +126,13 @@ const FBC = () => {
                   required
                 />
               </div>
-              {/* Hemoglobin */}
+              {/* haemoglobin */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Hemoglobin</label>
+                <label className="block text-sm font-medium text-gray-700">haemoglobin</label>
                 <input
                   type="number"
-                  value={hemoglobin}
-                  onChange={(e) => setHemoglobin(e.target.value)}
+                  value={haemoglobin}
+                  onChange={(e) => sethaemoglobin(e.target.value)}
                   className="mt-2 p-2 w-full border border-gray-300 rounded-md"
                   placeholder="Enter value"
                   required

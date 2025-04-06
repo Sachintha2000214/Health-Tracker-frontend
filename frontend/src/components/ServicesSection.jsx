@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import img1 from "../assets/img/1.jpg";
-import img2 from "../assets/img/2.jpg";
+import img1 from "../assets/img/meal-tracker.jpg"
+import img2 from "../assets/img/HEALTHTRACK.png"
 
 const ServicesSection = () => {
   const navigate = useNavigate(); // Initialize useNavigate
@@ -26,7 +26,10 @@ const ServicesSection = () => {
   const handleNavigate = (index) => {
     if (index === 1) {
       navigate("/healthtracker"); // Navigate to the specific page
-    } else {
+    } else if(index ===0){
+      navigate("/mealtracker");
+    }
+    else {
       alert("Feature coming soon!"); // Optional for other buttons
     }
   };

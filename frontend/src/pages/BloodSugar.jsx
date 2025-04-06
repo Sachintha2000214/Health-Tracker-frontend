@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import img1 from "../assets/img/bloodsugar.png";
+
 
 const BloodSugar = () => {
   const [activeTab, setActiveTab] = useState("manual"); // Active tab
@@ -87,7 +89,14 @@ const BloodSugar = () => {
           Upload PDF
         </button>
       </div>
-
+     <div>
+                  <br/>
+                  <img 
+                    src={img1} 
+                    alt="blood sugar" 
+                    className="mx-auto w-1/4" 
+                  />
+     </div>
       {/* Tab Content */}
       <div className="tab-content mt-4">
         {/* Manual Entry Form */}
@@ -103,6 +112,7 @@ const BloodSugar = () => {
                   className="mt-2 p-2 w-full border border-gray-300 rounded-md"
                   required
                 >
+                  
                   <option value="">Select test type</option>
                   <option value="fasting">Fasting</option>
                 <option value="post-prandial">Post Prandial</option>
