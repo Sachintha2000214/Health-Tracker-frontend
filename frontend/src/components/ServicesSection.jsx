@@ -1,39 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import img1 from "../assets/img/meal-tracker.jpg"
 import img2 from "../assets/img/HEALTHTRACK.png"
 
 const ServicesSection = () => {
   const navigate = useNavigate(); // Initialize useNavigate
+  const [user, setUser] = useState(null);
+  const [services, setServices] = useState([]);
 
-  const services = [
-    {
-      title: "Meal Tracker",
-      description:
-        "Learn your diet and track meal information using our application to live a healthier life.",
-      button: "Next",
-      img: img1,
-    },
-    {
-      title: "Health Tracker",
-      description:
-        "Get in touch with your family doctor for consultations and medical advice anytime.",
-      button: "Next",
-      img: img2,
-    },
-  ];
+  useEffect(() => {
+    const storedUser = JSON.parse(sessionStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
+
+      // Conditionally set services
+      if (storedUser.doctornumber) {
+        setServices([
+          {
+            title: "View Patient Reports",
+            description: "Access your patients' health and meal reports easily.",
+            button: "View",
+            img: img2, // make sure you have this image imported
+          },
+        ]);
+      } else {
+        setServices([
+          {
+            title: "Meal Tracker",
+            description:
+              "Learn your diet and track meal information using our application to live a healthier life.",
+            button: "Next",
+            img: img1,
+          },
+          {
+            title: "Health Tracker",
+            description:
+              "Get in touch with your family doctor for consultations and medical advice anytime.",
+            button: "Next",
+            img: img2,
+          },
+        ]);
+      }
+    }
+  }, []);
 
   const handleNavigate = (index) => {
-    if (index === 1) {
-      navigate("/healthtracker"); // Navigate to the specific page
-    } else if(index ===0){
-      navigate("/mealtracker");
-    }
-    else {
-      alert("Feature coming soon!"); // Optional for other buttons
+    if (user?.doctornumber) {
+      navigate("/reports"); // your route for doctors
+    } else {
+      if (index === 0) {
+        navigate("/mealtracker");
+      } else if (index === 1) {
+        navigate("/healthtracker");
+      } else {
+        alert("Feature coming soon!");
+      }
     }
   };
-
+  
   return (
     <div id="services" className="bg-neutralBackground py-12 px-4">
       <h2 className="text-center text-3xl md:text-4xl font-bold text-darkColor mb-8">
