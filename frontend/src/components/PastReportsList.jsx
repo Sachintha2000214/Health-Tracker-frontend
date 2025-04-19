@@ -11,8 +11,8 @@ const apiMap = {
 
 const columnMap = {
   bloodpressure: ["date", "systolic", "diastolic", "pulse", "doctorComment"],
-  bloodsugar: ["date", "glucose", "doctorComment"],
-  fbc: ["date", "hemoglobin", "rbc", "wbc", "platelets", "doctorComment"],
+  bloodsugar: ["date","type", "value", "doctorComment"],
+  fbc: ["date", "haemoglobin", "rbc", "wbc", "platelet", "doctorComment"],
   lipid: ["date", "hdl", "ldl", "triglycerides", "cholesterol", "doctorComment"],
 };
 

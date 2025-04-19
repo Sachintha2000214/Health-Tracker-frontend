@@ -32,19 +32,17 @@ const ViewReports = () => {
   ];
   const sugarColumns = [
     { key: "date", label: "Date", format: (val) => new Date(val).toLocaleDateString() },
-    { key: "fastingBloodSugar", label: "Fasting Blood Sugar" },
-    { key: "hbA1c", label: "HbA1c" },
-    { key: "postprandialBloodSugar", label: "Post prandial blood sugar" },
-    { key: "randomBloodSugar", label: "Random blood sugar" },
+    { key: "type", label: "Type" },
+    { key: "value", label: "Value" },
     { key: "userId", label: "Patient Id" },
-    { key: "doctorComment", label: "Comment" },
+    { key: "doctorComment", label: "Comment" },
 
-  ];
+  ];
   const fbcColumns = [
     { key: "date", label: "Date", format: (val) => new Date(val).toLocaleDateString() },
-    { key: "hemoglobin", label: "Hemoglobin" },
+    { key: "haemoglobin", label: "Haemoglobin" },
     { key: "wbc", label: "WBC" },
-    { key: "platelets", label: "Platelets" },
+    { key: "platelet", label: "Platelet" },
     { key: "patientId", label: "Patient Id" },
     { key: "doctorComment", label: "Comment" },
   ];
