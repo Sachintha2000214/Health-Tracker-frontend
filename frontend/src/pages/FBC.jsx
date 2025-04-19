@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import img1 from "../assets/img/fbc.png"
+import PatientReportList from "../components/PastReportsList";
 
 const FBC = () => {
   const [activeTab, setActiveTab] = useState("manual"); // Active tab
   const [rbc, setRbc] = useState("");
   const [wbc, setWbc] = useState("");
-  const [haemoglobin, sethaemoglobin] = useState("");
+  const [hemoglobin, setHemoglobin] = useState("");
   const [platelet, setPlatelet] = useState("");
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    const userObject = JSON.parse(sessionStorage.getItem("user"));
+    setUserId(userObject);
+    console.log(userId.id)
+  }, []);
+
 
   // Handle manual submit
   const handleManualSubmit = async (e) => {
@@ -17,13 +26,16 @@ const FBC = () => {
     const user = sessionStorage.getItem("user");
     const userObject = JSON.parse(user);
     const userId = userObject.id;
+    const docId = localStorage.getItem('selectedDoctorId');
+
 
     try {
       await axios.post("http://localhost:5555/api/patient/fbc", {
         userId,
+        docId,
         rbc,
         wbc,
-        haemoglobin,
+        hemoglobin,
         platelet,
       });
       setMessage("FBC data saved successfully!");
@@ -49,7 +61,9 @@ const FBC = () => {
     const user = sessionStorage.getItem("user");
     const userObject = JSON.parse(user);
     const userId = userObject.id;
+    const docId = localStorage.getItem('selectedDoctorId');
     formData.append("userId", userId);
+    formData.append("docId", docId);
     for (let pair of formData.entries()) {
       console.log("FormData Key:", pair[0], "=>", pair[1]);
     }
@@ -126,13 +140,13 @@ const FBC = () => {
                   required
                 />
               </div>
-              {/* haemoglobin */}
+              {/* Hemoglobin */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">haemoglobin</label>
+                <label className="block text-sm font-medium text-gray-700">Hemoglobin</label>
                 <input
                   type="number"
-                  value={haemoglobin}
-                  onChange={(e) => sethaemoglobin(e.target.value)}
+                  value={hemoglobin}
+                  onChange={(e) => setHemoglobin(e.target.value)}
                   className="mt-2 p-2 w-full border border-gray-300 rounded-md"
                   placeholder="Enter value"
                   required
@@ -196,6 +210,7 @@ const FBC = () => {
         </button>
       </div> */}
     </div>
+    <PatientReportList patientId={userId.id} reportType={"fbc"} />
     </div>
   );
 };

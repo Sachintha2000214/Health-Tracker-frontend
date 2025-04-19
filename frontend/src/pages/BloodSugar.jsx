@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import img1 from "../assets/img/bloodsugar.png";
+import PatientReportList from "../components/PastReportsList";
 
 
 const BloodSugar = () => {
@@ -9,6 +10,14 @@ const BloodSugar = () => {
   const [value, setTestValue] = useState(""); // Value field
   const [message, setMessage] = useState(""); // For success/error messages
   const [file, setFile] = useState(null);
+   const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    const userObject = JSON.parse(sessionStorage.getItem("user"));
+    setUserId(userObject);
+    console.log(userId.id)
+  }, []);
+
 
   // Handle manual submit
   const handleManualSubmit = async (e) => {
@@ -16,6 +25,8 @@ const BloodSugar = () => {
     const user = sessionStorage.getItem("user");
     const userObject = JSON.parse(user);
     const userId = userObject.id;
+    const docId = localStorage.getItem('selectedDoctorId');
+
 
     if (!userId) {
       setMessage("User not logged in!");
@@ -25,6 +36,7 @@ const BloodSugar = () => {
     try {
       await axios.post("http://localhost:5555/api/patient/bloodsugar", {
         userId:userId,
+        docId: docId,
         type: type,
         value: value,
       });
@@ -51,7 +63,9 @@ const BloodSugar = () => {
     const user = sessionStorage.getItem("user");
     const userObject = JSON.parse(user);
     const userId = userObject.id;
+    const docId = localStorage.getItem('selectedDoctorId');
     formData.append("userId", userId);
+    formData.append("docId", docId);
     for (let pair of formData.entries()) {
       console.log("FormData Key:", pair[0], "=>", pair[1]);
     }
@@ -164,6 +178,7 @@ const BloodSugar = () => {
         {message && <p className="mt-4 text-center text-lg text-red-500">{message}</p>}
       </div>
     </div>
+    <PatientReportList patientId={userId.id} reportType={"bloodsugar"} />
     </div>
   );
 };

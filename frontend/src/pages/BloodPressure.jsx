@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import img1 from "../assets/img/bloodpressure.png";
+import PatientReportList from "../components/PastReportsList";
 
 const BloodPressure = () => {
   const [activeTab, setActiveTab] = useState("manual");
@@ -9,18 +10,27 @@ const BloodPressure = () => {
   const [pulse, setPulse] = useState("");
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    const userObject = JSON.parse(sessionStorage.getItem("user"));
+    setUserId(userObject);
+    console.log(userId.id)
+  }, []);
 
   const handleManualSubmit = async (e) => {
     e.preventDefault();
     const user = sessionStorage.getItem("user");
     const userObject = JSON.parse(user);
     const userId = userObject.id;
+    const docId = localStorage.getItem('selectedDoctorId');
     try {
       await axios.post("http://localhost:5555/api/patient/bloodpressure", {
         systolic,
         diastolic,
         pulse,
-        userId
+        userId,
+        docId
       });
       setMessage("data saved successfully!");
     } catch (error) {
@@ -45,7 +55,9 @@ const BloodPressure = () => {
     const user = sessionStorage.getItem("user");
     const userObject = JSON.parse(user);
     const userId = userObject.id;
+    const docId = localStorage.getItem('selectedDoctorId');
     formData.append("userId", userId);
+    formData.append("docId", docId);
     for (let pair of formData.entries()) {
       console.log("FormData Key:", pair[0], "=>", pair[1]);
     }
@@ -154,6 +166,7 @@ const BloodPressure = () => {
 
         {message && <p className="text-center text-sm text-green-600 mt-4">{message}</p>}
       </div>
+      <PatientReportList patientId={userId.id} reportType={"bloodpressure"} />
     </div>
   );
 };

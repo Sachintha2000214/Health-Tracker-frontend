@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import img1 from "../assets/img/lipidprofile.png"
+import PatientReportList from "../components/PastReportsList";
 
 const LipidProfile = () => {
     const [activeTab, setActiveTab] = useState("manual");
@@ -10,16 +11,27 @@ const LipidProfile = () => {
     const [triglycerides, setTriglycerides] = useState("");
     const [file, setFile] = useState(null);
     const [message, setMessage] = useState(""); 
+    const [userId, setUserId] = useState("");
+
+    useEffect(() => {
+      const userObject = JSON.parse(sessionStorage.getItem("user"));
+      setUserId(userObject);
+      console.log(userId.id)
+    }, []);
+  
 
     const handleManualSubmit = async (e) => {
       e.preventDefault();
       const user = sessionStorage.getItem("user");
     const userObject = JSON.parse(user);
     const userId = userObject.id;
+    const docId = localStorage.getItem('selectedDoctorId');
+
   
       try {
         await axios.post("http://localhost:5555/api/patient/lipidprofile", {
           userId:userId,
+          docId,
           cholesterol,
           ldl,
           hdl,
@@ -49,6 +61,8 @@ const LipidProfile = () => {
       const userObject = JSON.parse(user);
       const userId = userObject.id;
       formData.append("userId", userId);
+      const docId = localStorage.getItem('selectedDoctorId');
+      formData.append("docId", docId);
       for (let pair of formData.entries()) {
         console.log("FormData Key:", pair[0], "=>", pair[1]);
       }
@@ -180,6 +194,7 @@ const LipidProfile = () => {
           {message && <p className="mt-4 text-center text-lg text-red-500">{message}</p>}
         </div>
       </div>
+      <PatientReportList patientId={userId.id} reportType={"lipid"} />
       </div>
     );
   };
