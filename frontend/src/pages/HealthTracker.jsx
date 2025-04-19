@@ -8,7 +8,7 @@ import img4 from "../assets/img/fbc.png";
 const HealthTracker = () => {
   const currentDate = new Date().toLocaleDateString("en-GB"); // Format the current date
   const [user, setUser] = useState(null); // State to hold user data
-  const [doctors, setDoctors] = useState(null);
+  const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
 
@@ -26,43 +26,50 @@ const HealthTracker = () => {
     if (storedUser) {
       setUser(storedUser);
     }
-    const fetchDoctors = async () => {
-      try {
-        const response = await fetch('http://localhost:5555/api/doctor/getalldoctors');
-        if (!response.ok) {
-          throw new Error('Failed to fetch doctors');
-        }
-        const data = await response.json();
-      
-        const savedDoctorId = localStorage.getItem('selectedDoctorId');
-        if (savedDoctorId && Array.isArray(data)) {
-          const savedDoctor = data.find(doc => doc.doctorNumber === savedDoctorId);
-          if (savedDoctor) {
-            console.log(savedDoctor)
-            setSelectedDoctor(savedDoctor.doctorNumber);
-            setDoctors(data);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching doctors:', error);
-      } finally {
-        setLoading(false);
+  const fetchDoctors = async () => {
+    try {
+      const response = await fetch('http://localhost:5555/api/doctor/getalldoctors');
+      if (!response.ok) {
+        throw new Error('Failed to fetch doctors');
       }
-    };
+      
+      const data = await response.json();
+      setDoctors(data); // Set all doctors first
+  
+      const savedDoctorId = localStorage.getItem('selectedDoctorId');
+      if (savedDoctorId && Array.isArray(data)) {
+        const savedDoctor = data.find(doc => doc.doctorNumber === savedDoctorId);
+        if (savedDoctor) {
+          setSelectedDoctor(savedDoctor.doctorNumber); // Set selected if found
+        } else {
+          // Invalid doctor ID in local storage
+          localStorage.removeItem('selectedDoctorId');
+          setSelectedDoctor(null);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching doctors:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+    
 
     fetchDoctors();
   }, []);
 
 
   const handleChange = (e) => {
-    setSelectedDoctor({ ...doctors, [e.target.name]: e.target.value });
-    console.log(e.target.value)
-    if (e.target.value) {
-      localStorage.setItem('selectedDoctorId', e.target.value);
+    const selectedId = e.target.value;
+    setSelectedDoctor(selectedId); // just the ID
+  
+    if (selectedId) {
+      localStorage.setItem('selectedDoctorId', selectedId);
     } else {
       localStorage.removeItem('selectedDoctorId');
     }
   };
+  
   return (
     <div className="bg-gradient-to-r from-teal-100 to-blue-100 min-h-screen flex flex-col">
       {/* Header Section */}
@@ -84,15 +91,16 @@ const HealthTracker = () => {
             id="doctorSelect"
             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
             onChange={handleChange}
-            value={selectedDoctor}
+            value={selectedDoctor || ""} // ensure fallback to empty string
           >
             <option value="">-- Select a Doctor --</option>
-            {doctors.map(doctor => (
+            {doctors.map((doctor) => (
               <option key={doctor.doctorNumber} value={doctor.doctorNumber}>
-                {doctor.name} ({doctor.specialization})
+                Dr. {doctor.name} ({doctor.specialization})
               </option>
             ))}
-            </select>
+          </select>
+
         </div>
       )}
 

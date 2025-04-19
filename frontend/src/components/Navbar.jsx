@@ -39,7 +39,11 @@ const Navbar = () => {
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("token");
     setUser(null);
-    navigate("/userlogin");
+    if (user.doctornumber) {
+      navigate("/login");
+    } else {
+      navigate("/userlogin");
+    }
     // window.location.href = "/login"; // Example redirect
   };
 
