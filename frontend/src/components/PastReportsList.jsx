@@ -38,7 +38,9 @@ const PatientReportList = ({ patientId, reportType }) => {
       <tr key={index} className="border-b text-sm">
         {columnMap[reportType.toLowerCase()].map((field) => (
           <td key={field} className="px-4 py-2 text-center">
-            {item[field] || "-"}
+            {field=="date"
+            ? new Date(item[field]).toLocaleDateString()
+            : item[field] || "-"}
           </td>
         ))}
       </tr>

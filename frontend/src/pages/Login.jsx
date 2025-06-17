@@ -8,7 +8,7 @@ const Login = () => {
   const [activeSlide, setActiveSlide] = useState(0);
   const navigate = useNavigate();
 
-  
+  // Slider content
   const slides = [
     {
       id: 1,

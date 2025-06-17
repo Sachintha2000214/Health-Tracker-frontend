@@ -34,15 +34,15 @@ const ViewReports = () => {
     { key: "date", label: "Date", format: (val) => new Date(val).toLocaleDateString() },
     { key: "type", label: "Type" },
     { key: "value", label: "Value" },
-    { key: "userId", label: "Patient Id" },
-    { key: "doctorComment", label: "Comment" },
+    { key: "patientId", label: "Patient Id" },
+    { key: "doctorComment", label: "Comment" },
 
-  ];
+  ];
   const fbcColumns = [
     { key: "date", label: "Date", format: (val) => new Date(val).toLocaleDateString() },
-    { key: "haemoglobin", label: "Haemoglobin" },
+    { key: "haemoglobin", label: "haemoglobin" },
     { key: "wbc", label: "WBC" },
-    { key: "platelet", label: "Platelet" },
+    { key: "platelet", label: "platelet" },
     { key: "patientId", label: "Patient Id" },
     { key: "doctorComment", label: "Comment" },
   ];
@@ -186,6 +186,7 @@ const ViewReports = () => {
       .put(url, { comment })
       .then(() => {
         alert("Comment added successfully!");
+         window.location.reload();
       })
       .catch((err) => {
         console.error("Failed to add comment:", err);

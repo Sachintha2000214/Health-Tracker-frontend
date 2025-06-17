@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
-import patientImage from '../assets/img/patient.png'
-
 
 const UserLogin = () => {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -65,10 +63,9 @@ const UserLogin = () => {
             {/* Slider Section */}
             <div className="w-full lg:w-1/2 xl:w-3/5 px-4 order-last lg:order-first">
               <div className="relative max-w-xl mx-auto lg:mx-0 lg:max-w-3xl h-full">
-            
               <img
-              className="block w-1/2 h-auto object-contain rounded-3xl mx-auto"                  
-              src={patientImage}
+                  className="block w-full h-166 lg:h-full object-cover rounded-3xl"
+                  src="https://everydayfeminism.com/wp-content/uploads/2015/08/Screen-Shot-2015-08-24-at-11.05.54-AM.png"
                   alt="Slider Background"
                 />
                 <div className="absolute bottom-0 w-full left-0 p-4 sm:p-6">
@@ -80,10 +77,11 @@ const UserLogin = () => {
             <div className="w-full lg:w-1/2 xl:w-2/5 px-4 mb-16 lg:mb-0">
               <div className="max-w-md lg:py-20 mx-auto lg:mr-0">
                 <h3 className="font-heading text-4xl text-gray-900 font-semibold mb-4">
-                 Patient Login 
+                  Sign in to your account
                 </h3>
                 <p className="text-lg text-gray-500 mb-10">
-                 Greetings on your return!
+                  Greetings on your return! We kindly request you to enter your
+                  details.
                 </p>
                 <form onSubmit={handleSubmit}>
                   <div className="mb-6">

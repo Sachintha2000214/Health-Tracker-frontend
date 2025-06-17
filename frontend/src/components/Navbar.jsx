@@ -39,11 +39,7 @@ const Navbar = () => {
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("token");
     setUser(null);
-    if (user.doctornumber) {
-      navigate("/login");
-    } else {
-      navigate("/userlogin");
-    }
+    navigate("/userlogin");
     // window.location.href = "/login"; // Example redirect
   };
 
@@ -60,12 +56,8 @@ const Navbar = () => {
       {user && (
         <div className="flex items-center space-x-4">
           <span className="text-sm text-white font-medium">
-            Welcome, <span className="font-bold">
-              {user.doctornumber ? `Dr. ${user.name}` : user.name}
-            </span>
-            {!user.doctornumber && ` - ID: ${user.id}`}
+            Welcome, <span className="font-bold">{user.name}</span> - ID: {user.id}
           </span>
-
           <button 
             className="bg-white text-teal-600 font-semibold py-2 px-4 rounded-lg hover:bg-teal-500 hover:text-white transition-all duration-300"
             onClick={handleLogout}

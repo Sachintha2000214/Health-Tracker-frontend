@@ -63,7 +63,13 @@ const ServicesSection = () => {
       <h2 className="text-center text-3xl md:text-4xl font-bold text-darkColor mb-8">
         Our <span className="text-teal-500">Main Services</span> Categories
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+     <div
+  className={`${
+    services.length === 1
+      ? "flex justify-center"
+      : "grid grid-cols-1 md:grid-cols-2 gap-8"
+  } max-w-7xl mx-auto`}
+>
         {services.map((service, index) => (
           <div
             key={index}

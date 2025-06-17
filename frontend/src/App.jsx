@@ -20,6 +20,8 @@ import BMICalculator from "./pages/BMICalculator";
 import CalorieCalculator from "./pages/CalorieCalculator";
 import ViewPatientReports from "./pages/viewPatientReports";
 import ViewReports from "./pages/ViewReports";
+import SmartCalorieCounter from "./pages/SmartCalorieCounter";
+
 
 const App = () => {
   return (
@@ -45,6 +47,8 @@ const App = () => {
       <Route path='/caloriesCal' element={<CalorieCalculator/>}/>
       <Route path='/reports' element={<ViewPatientReports/>}/>
       <Route path= '/view' element={<ViewReports/>}/>
+      <Route path='/smartcaloriecounter' element={<SmartCalorieCounter/>}/>
+
 
 
     </Routes>

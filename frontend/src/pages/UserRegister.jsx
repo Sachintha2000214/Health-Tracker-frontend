@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios"; // Import axios for making HTTP requests
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
-import patientImage from '../assets/img/patient.png'
 
 const UserRegister = () => {
     const navigate = useNavigate();
@@ -35,15 +34,11 @@ const UserRegister = () => {
       <div className="container mx-auto shadow-xl rounded-lg p-8 bg-gradient-to-r from-teal-100 to-blue-100 min-h-screen flex flex-col">
         <div className="max-w-md mx-auto">
           <h3 className="font-heading text-4xl text-gray-900 font-semibold mb-4">
-            - Patient Sign Up Form -
+            Create a new account
           </h3>
-          <div className="text-center mt-6">
-            <img 
-              src={patientImage} 
-              alt="Patient" 
-              className="mx-auto w-1/4" 
-            />
-          </div>
+          <p className="text-lg text-gray-500 mb-10">
+            Welcome! Please fill in the form to create an account.
+          </p>
           <form onSubmit={handleSubmit}>
             {/* Name Field */}
             <div className="mb-6">

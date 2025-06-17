@@ -8,7 +8,6 @@ const Register = () => {
     email: '',
     doctornumber: '',
     mobilenumber: '',
-    specialization: '',
     password: ''
   });
   const [error, setError] = useState('');
@@ -89,42 +88,6 @@ const Register = () => {
                 placeholder="D12345"
               />
             </div>
-
-            <div className="mb-6">
-            <label
-              className="block mb-1.5 text-sm text-gray-900 font-semibold"
-              htmlFor="specialization"
-            >
-              Doctor Specialization
-            </label>
-            <select
-              className="w-full py-3 px-4 text-sm text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-purple-500 focus:outline-purple rounded-lg"
-              id="specialization"
-              name="specialization"
-              value={formData.specialization}
-              onChange={handleChange}
-            >
-              <option value="">Select specialization</option>
-              
-              {/* General & Family Care */}
-              <option value="Family Medicine Physician">Family Medicine Physician – General care for all ages</option>
-              <option value="General Practitioner">General Practitioner (GP) – Basic health evaluation</option>
-              <option value="Pediatrician">Pediatrician – Child health (birth to teens)</option>
-              <option value="Geriatrician">Geriatrician – Elderly care</option>
-              <option value="Internal Medicine Physician">Internal Medicine Physician – Adult health</option>
-              
-              {/* Specialist Referrals */}
-              <option value="Cardiologist">Cardiologist – Heart health (BP, ECG, etc.)</option>
-              <option value="Endocrinologist">Endocrinologist – Diabetes, thyroid, hormones</option>
-              <option value="Gynecologist">Gynecologist – Women’s reproductive health</option>
-              <option value="Dermatologist">Dermatologist – Skin, acne, moles</option>
-              <option value="Ophthalmologist">Ophthalmologist – Vision and eye care</option>
-              <option value="ENT">ENT (Otolaryngologist) – Ear, nose, throat</option>
-              <option value="Dentist">Dentist – Oral checkups and hygiene</option>
-              <option value="Nutritionist">Nutritionist/Dietitian – Diet and healthy eating</option>
-              <option value="Psychiatrist">Psychiatrist/Psychologist – Mental health and stress</option>
-            </select>
-          </div>
 
             {/* Mobile Number Field */}
             <div className="mb-6">

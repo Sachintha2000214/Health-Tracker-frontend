@@ -56,7 +56,7 @@ const ViewPatientReports = () => {
             <img
             src={category.image}
             alt={category.name}
-            className="w-16 h-16 object-cover rounded-full mr-4"
+            className="w-32 h-32 object-cover rounded-full mr-6"
             />
             <div className="text-xl font-semibold text-teal-600 hover:text-teal-800 transition-colors duration-200">
             {category.name}
