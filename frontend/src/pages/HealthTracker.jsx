@@ -14,7 +14,12 @@ const HealthTracker = () => {
   const [selectedDoctor, setSelectedDoctor] = useState("");
 
   // Categories for the dashboard with updated images
+  // Categories for the dashboard with updated images
   const categories = [
+    { name: "Blood Pressure", image: img1, path: "/bloodpressure" },
+    { name: "Blood Sugar", image: img2, path: "/bloodsugar" },
+    { name: "Lipid Profile", image: img3, path: "/lipidprofile" },
+    { name: "FBC", image: img4, path: "/fbc" },
     { name: "Blood Pressure", image: img1, path: "/bloodpressure" },
     { name: "Blood Sugar", image: img2, path: "/bloodsugar" },
     { name: "Lipid Profile", image: img3, path: "/lipidprofile" },

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import img1 from "../assets/img/fbc.png"; // your header image
 import PatientReportList from "../components/PastReportsList";
@@ -7,6 +8,7 @@ const FBC = () => {
   const [activeTab, setActiveTab] = useState("manual");
   const [rbc, setRbc] = useState("");
   const [wbc, setWbc] = useState("");
+  const [haemoglobin, sethaemoglobin] = useState("");
   const [haemoglobin, sethaemoglobin] = useState("");
   const [platelet, setPlatelet] = useState("");
   const [message, setMessage] = useState("");
@@ -29,8 +31,10 @@ const FBC = () => {
       await axios.post("http://localhost:5555/api/patient/fbc", {
         userId,
         docId,
+        docId,
         rbc,
         wbc,
+        haemoglobin,
         haemoglobin,
         platelet,
       });

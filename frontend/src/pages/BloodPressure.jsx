@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import img1 from "../assets/img/bloodpressure.png";
+import PatientReportList from "../components/PastReportsList";
 import img1 from "../assets/img/bloodpressure.png";
 import PatientReportList from "../components/PastReportsList";
 
@@ -24,11 +27,14 @@ const BloodPressure = () => {
     const userObject = JSON.parse(user);
     const userId = userObject.id;
     const docId = localStorage.getItem('selectedDoctorId');
+    const docId = localStorage.getItem('selectedDoctorId');
     try {
       await axios.post("http://localhost:5555/api/patient/bloodpressure", {
         systolic,
         diastolic,
         pulse,
+        userId,
+        docId
         userId,
         docId
       });
@@ -54,6 +60,7 @@ const BloodPressure = () => {
     const user = sessionStorage.getItem("user");
     const userObject = JSON.parse(user);
     const userId = userObject.id;
+    const docId = localStorage.getItem('selectedDoctorId');
     const docId = localStorage.getItem('selectedDoctorId');
     formData.append("userId", userId);
     formData.append("docId", docId);
@@ -252,6 +259,7 @@ const BloodPressure = () => {
           </div>
         </div>
       </div>
+      <PatientReportList patientId={userId.id} reportType={"bloodpressure"} />
     </div>
   );
 };
