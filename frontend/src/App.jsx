@@ -15,6 +15,13 @@ import Others from "./pages/Others";
 import HealthTracker from "./pages/HealthTracker"
 import DoctorDashboard from "./pages/DoctorDashboard";
 import PrescribedDrugs from "./pages/PrescribedDrugsPage";
+import MealTracker from "./pages/MealTracker";
+import BMICalculator from "./pages/BMICalculator";
+import CalorieCalculator from "./pages/CalorieCalculator";
+import ViewPatientReports from "./pages/viewPatientReports";
+import ViewReports from "./pages/ViewReports";
+import SmartCalorieCounter from "./pages/SmartCalorieCounter";
+
 
 const App = () => {
   return (
@@ -34,6 +41,15 @@ const App = () => {
       <Route path='/others' element={<Others/>}/>
       <Route path='/docdashboard' element={<DoctorDashboard/>}/>
       <Route path='/pdrug' element={<PrescribedDrugs/>}/>
+      <Route path='/mealtracker' element={<MealTracker/>}/>
+      <Route path='/bmiCal' element={<BMICalculator/>}/>
+      <Route path='/bmiCal' element={<BMICalculator/>}/>
+      <Route path='/caloriesCal' element={<CalorieCalculator/>}/>
+      <Route path='/reports' element={<ViewPatientReports/>}/>
+      <Route path= '/view' element={<ViewReports/>}/>
+      <Route path='/smartcaloriecounter' element={<SmartCalorieCounter/>}/>
+
+
 
     </Routes>
   );

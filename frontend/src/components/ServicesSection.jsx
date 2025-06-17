@@ -1,42 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import img1 from "../assets/img/1.jpg";
-import img2 from "../assets/img/2.jpg";
+import img1 from "../assets/img/meal-tracker.jpg"
+import img2 from "../assets/img/HEALTHTRACK.png"
 
 const ServicesSection = () => {
   const navigate = useNavigate(); // Initialize useNavigate
+  const [user, setUser] = useState(null);
+  const [services, setServices] = useState([]);
 
-  const services = [
-    {
-      title: "Meal Tracker",
-      description:
-        "Learn your diet and track meal information using our application to live a healthier life.",
-      button: "Next",
-      img: img1,
-    },
-    {
-      title: "Health Tracker",
-      description:
-        "Get in touch with your family doctor for consultations and medical advice anytime.",
-      button: "Next",
-      img: img2,
-    },
-  ];
+  useEffect(() => {
+    const storedUser = JSON.parse(sessionStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
+
+      // Conditionally set services
+      if (storedUser.doctornumber) {
+        setServices([
+          {
+            title: "View Patient Reports",
+            description: "Access your patients' health and meal reports easily.",
+            button: "View",
+            img: img2, // make sure you have this image imported
+          },
+        ]);
+      } else {
+        setServices([
+          {
+            title: "Meal Tracker",
+            description:
+              "Learn your diet and track meal information using our application to live a healthier life.",
+            button: "Next",
+            img: img1,
+          },
+          {
+            title: "Health Tracker",
+            description:
+              "Get in touch with your family doctor for consultations and medical advice anytime.",
+            button: "Next",
+            img: img2,
+          },
+        ]);
+      }
+    }
+  }, []);
 
   const handleNavigate = (index) => {
-    if (index === 1) {
-      navigate("/healthtracker"); // Navigate to the specific page
+    if (user?.doctornumber) {
+      navigate("/reports"); // your route for doctors
     } else {
-      alert("Feature coming soon!"); // Optional for other buttons
+      if (index === 0) {
+        navigate("/mealtracker");
+      } else if (index === 1) {
+        navigate("/healthtracker");
+      } else {
+        alert("Feature coming soon!");
+      }
     }
   };
-
+  
   return (
     <div id="services" className="bg-neutralBackground py-12 px-4">
       <h2 className="text-center text-3xl md:text-4xl font-bold text-darkColor mb-8">
         Our <span className="text-teal-500">Main Services</span> Categories
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+     <div
+  className={`${
+    services.length === 1
+      ? "flex justify-center"
+      : "grid grid-cols-1 md:grid-cols-2 gap-8"
+  } max-w-7xl mx-auto`}
+>
         {services.map((service, index) => (
           <div
             key={index}
