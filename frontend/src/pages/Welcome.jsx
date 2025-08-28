@@ -22,7 +22,7 @@ function Welcome() {
         {/* Cards Container */}
         <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
           {/* Doctor Card */}
-          <Link to="/register" className="block">
+          <Link to="/login" className="block">
             <div className="bg-[#1a1a1a] rounded-2xl p-8 hover:bg-[#222] transition-colors cursor-pointer">
               <div className="aspect-square rounded-full overflow-hidden mb-6 max-w-[200px] mx-auto">
                 <img
@@ -39,7 +39,7 @@ function Welcome() {
           </Link>
 
           {/* Patient Card */}
-          <Link to="/userregister" className="block">
+          <Link to="/userlogin" className="block">
           <div className="bg-[#1a1a1a] rounded-2xl p-8 hover:bg-[#222] transition-colors cursor-pointer">
             <div className="aspect-square rounded-full overflow-hidden mb-6 max-w-[200px] mx-auto">
               <img

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import patientImage from '../assets/img/patient.png'
+
 
 const UserLogin = () => {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -63,9 +65,10 @@ const UserLogin = () => {
             {/* Slider Section */}
             <div className="w-full lg:w-1/2 xl:w-3/5 px-4 order-last lg:order-first">
               <div className="relative max-w-xl mx-auto lg:mx-0 lg:max-w-3xl h-full">
+            
               <img
-                  className="block w-full h-166 lg:h-full object-cover rounded-3xl"
-                  src="https://everydayfeminism.com/wp-content/uploads/2015/08/Screen-Shot-2015-08-24-at-11.05.54-AM.png"
+              className="block w-1/2 h-auto object-contain rounded-3xl mx-auto"                  
+              src={patientImage}
                   alt="Slider Background"
                 />
                 <div className="absolute bottom-0 w-full left-0 p-4 sm:p-6">
@@ -77,11 +80,10 @@ const UserLogin = () => {
             <div className="w-full lg:w-1/2 xl:w-2/5 px-4 mb-16 lg:mb-0">
               <div className="max-w-md lg:py-20 mx-auto lg:mr-0">
                 <h3 className="font-heading text-4xl text-gray-900 font-semibold mb-4">
-                  Sign in to your account
+                 Patient Login 
                 </h3>
                 <p className="text-lg text-gray-500 mb-10">
-                  Greetings on your return! We kindly request you to enter your
-                  details.
+                 Greetings on your return!
                 </p>
                 <form onSubmit={handleSubmit}>
                   <div className="mb-6">
@@ -109,12 +111,6 @@ const UserLogin = () => {
                       >
                         Password
                       </label>
-                      {/* <a
-                        className="inline-block text-xs font-semibold text-teal-700 hover:text-gray-900"
-                        href="#"
-                      >
-                        Forget password?
-                      </a> */}
                     </div>
                     <input
                       className="w-full py-3 px-4 text-sm text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-purple-500 focus:outline-purple rounded-lg"
