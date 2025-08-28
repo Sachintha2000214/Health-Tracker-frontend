@@ -6,7 +6,7 @@ import Register from "./pages/Register"
 import Welcome from "./pages/Welcome";
 import UserLogin from "./pages/UserLogin";
 import UserRegister from "./pages/UserRegister";
-import ChatPage from "./pages/chatPage";
+import ChatPage from "./pages/ChatPage";
 import BloodPressure from "./pages/BloodPressure";
 import BloodSugar from "./pages/BloodSugar";
 import FBC from "./pages/FBC";
