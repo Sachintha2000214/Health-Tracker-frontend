@@ -38,6 +38,9 @@ const FBC = () => {
       window.location.reload();
     } catch (error) {
       setMessage("Error saving FBC data.");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     }
   };
 
@@ -74,6 +77,10 @@ const FBC = () => {
       window.location.reload();
     } catch (error) {
       setMessage(`Error: ${error.message}`);
+      setFile("")
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     }
   };
 
