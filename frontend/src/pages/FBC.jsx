@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 import img1 from "../assets/img/fbc.png"; // your header image
 import PatientReportList from "../components/PastReportsList";
@@ -8,7 +7,6 @@ const FBC = () => {
   const [activeTab, setActiveTab] = useState("manual");
   const [rbc, setRbc] = useState("");
   const [wbc, setWbc] = useState("");
-  const [haemoglobin, sethaemoglobin] = useState("");
   const [haemoglobin, sethaemoglobin] = useState("");
   const [platelet, setPlatelet] = useState("");
   const [message, setMessage] = useState("");
@@ -31,10 +29,8 @@ const FBC = () => {
       await axios.post("http://localhost:5555/api/patient/fbc", {
         userId,
         docId,
-        docId,
         rbc,
         wbc,
-        haemoglobin,
         haemoglobin,
         platelet,
       });
@@ -85,12 +81,6 @@ const FBC = () => {
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex-col">
       <div
         className="bg-white p-6 rounded-xl shadow-lg w-96"
-        style={{
-          backgroundImage: `url(${img1})`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
       >
         <h2 className="text-xl font-bold text-center text-gray-700 mb-2 bg-white bg-opacity-70 rounded-md py-1">
           FBC

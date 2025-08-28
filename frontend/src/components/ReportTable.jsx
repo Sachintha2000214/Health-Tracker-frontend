@@ -30,9 +30,12 @@ const ReportTable = ({ columns, data, onViewHistory, onAddComment }) => {
                 {/* Actions */}
                 <td className="px-4 py-2 flex flex-col sm:flex-row gap-2">
                   {isCommented ? (
-                    <span className="bg-green-200 text-green-700 px-3 py-1 rounded-full text-sm">
-                      Commented
-                    </span>
+                    <button
+                      onClick={() => onAddComment(row, row.comment) } // same API for update
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-1 rounded-md"
+                    >
+                      Update Comment
+                    </button>
                   ) : (
                     <button
                       onClick={() => onAddComment(row)}

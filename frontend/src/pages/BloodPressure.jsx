@@ -1,267 +1,343 @@
-import React, { useEffect, useState } from "react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import img1 from "../assets/img/bloodpressure.png";
 import PatientReportList from "../components/PastReportsList";
-import img1 from "../assets/img/bloodpressure.png";
-import PatientReportList from "../components/PastReportsList";
 
-const BloodPressure = () => {
+/**
+ * Blood Pressure entry & PDF upload (aligned with BloodSugar):
+ * - Compact card UI with tabs
+ * - Inline validation
+ * - Toasts + spinners; no full-page reloads
+ * - Optional classification pill for quick context (UI guidance only)
+ */
+export default function BloodPressure() {
   const [activeTab, setActiveTab] = useState("manual");
   const [systolic, setSystolic] = useState("");
   const [diastolic, setDiastolic] = useState("");
   const [pulse, setPulse] = useState("");
   const [file, setFile] = useState(null);
-  const [message, setMessage] = useState("");
   const [userId, setUserId] = useState("");
 
+  // UI state
+  const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [toast, setToast] = useState({ type: "", msg: "" }); // success | error | info
+
   useEffect(() => {
-    const userObject = JSON.parse(sessionStorage.getItem("user"));
-    setUserId(userObject);
-    // eslint-disable-next-line
+    try {
+      const raw = sessionStorage.getItem("user");
+      const obj = raw ? JSON.parse(raw) : null;
+      setUserId(obj?.id || "");
+    } catch {
+      setUserId("");
+    }
   }, []);
 
+  const clearToastLater = () => setTimeout(() => setToast({ type: "", msg: "" }), 3000);
+
+  // --- Classification (UI guidance only; not diagnostic) ---
+  const bpClassification = useMemo(() => {
+    const s = Number(systolic);
+    const d = Number(diastolic);
+    if (!s || !d) return null;
+
+    // Optional "Low" for very low readings
+    if (s < 90 && d < 60) return "Low";
+
+    if (s >= 180 || d >= 120) return "Crisis";
+    if (s >= 140 || d >= 90) return "Stage 2";
+    if ((s >= 130 && s <= 139) || (d >= 80 && d <= 89)) return "Stage 1";
+    if (s >= 120 && s <= 129 && d < 80) return "Elevated";
+    if (s < 120 && d < 80) return "Normal";
+    return null;
+  }, [systolic, diastolic]);
+
+  const legendText =
+    "Normal <120/<80 · Elevated 120–129 & <80 · Stage 1 130–139 or 80–89 · Stage 2 ≥140 or ≥90 · Crisis ≥180 or ≥120";
+
+  const StatusPill = ({ label }) => {
+    const color =
+      label === "Normal"
+        ? "bg-emerald-100 text-emerald-700 border-emerald-200"
+        : label === "Elevated" || label === "Stage 1"
+        ? "bg-amber-100 text-amber-700 border-amber-200"
+        : label === "Low"
+        ? "bg-sky-100 text-sky-700 border-sky-200"
+        : "bg-rose-100 text-rose-700 border-rose-200"; // Stage 2 / Crisis
+    return (
+      <span className={`inline-block rounded-full border px-3 py-1 text-xs font-medium ${color}`}>
+        {label}
+      </span>
+    );
+  };
+
+  // --- Manual submit ---
   const handleManualSubmit = async (e) => {
     e.preventDefault();
-    const user = sessionStorage.getItem("user");
-    const userObject = JSON.parse(user);
-    const userId = userObject.id;
-    const docId = localStorage.getItem('selectedDoctorId');
-    const docId = localStorage.getItem('selectedDoctorId');
+
+    if (!userId) {
+      setToast({ type: "error", msg: "User not logged in." });
+      clearToastLater();
+      return;
+    }
+    const docId = localStorage.getItem("selectedDoctorId") || null;
+    if (!docId) {
+      setToast({ type: "error", msg: "Select a doctor before saving." });
+      clearToastLater();
+      return;
+    }
+
+    const s = Number(systolic);
+    const d = Number(diastolic);
+    const p = Number(pulse);
+
+    const valid = (n) => Number.isFinite(n) && n > 0;
+    if (!valid(s) || !valid(d) || !valid(p)) {
+      setToast({ type: "error", msg: "Please enter valid positive numbers." });
+      clearToastLater();
+      return;
+    }
+
+    setSubmitting(true);
     try {
       await axios.post("http://localhost:5555/api/patient/bloodpressure", {
-        systolic,
-        diastolic,
-        pulse,
+        systolic: s,
+        diastolic: d,
+        pulse: p,
         userId,
-        docId
-        userId,
-        docId
+        docId,
       });
-      setMessage("data saved successfully!");
-    } catch (error) {
-      setMessage("Error saving data.");
-      window.location.reload();
+
+      setToast({ type: "success", msg: "Saved successfully!" });
+      setSystolic("");
+      setDiastolic("");
+      setPulse("");
+
+      // Notify siblings (e.g., PastReportsList) if they listen for it
+      window.dispatchEvent(new CustomEvent("report:updated", { detail: { type: "bloodpressure" } }));
+    } catch {
+      setToast({ type: "error", msg: "Error saving data." });
+    } finally {
+      setSubmitting(false);
+      clearToastLater();
     }
   };
 
+  // --- PDF upload ---
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const f = e.target.files?.[0];
+    if (!f) return;
+    if (f.type !== "application/pdf") {
+      setToast({ type: "error", msg: "Only PDF files are allowed." });
+      clearToastLater();
+      return;
+    }
+    if (f.size > 7 * 1024 * 1024) {
+      setToast({ type: "error", msg: "PDF must be ≤ 7 MB." });
+      clearToastLater();
+      return;
+    }
+    setFile(f);
   };
 
   const handleFileUpload = async () => {
     if (!file) {
-      setMessage("Please select a PDF file.");
+      setToast({ type: "info", msg: "Choose a PDF first." });
+      clearToastLater();
+      return;
+    }
+
+    const docId = localStorage.getItem("selectedDoctorId") || null;
+    if (!docId) {
+      setToast({ type: "error", msg: "Select a doctor before uploading." });
+      clearToastLater();
       return;
     }
 
     const formData = new FormData();
     formData.append("file", file);
-    const user = sessionStorage.getItem("user");
-    const userObject = JSON.parse(user);
-    const userId = userObject.id;
-    const docId = localStorage.getItem('selectedDoctorId');
-    const docId = localStorage.getItem('selectedDoctorId');
     formData.append("userId", userId);
     formData.append("docId", docId);
 
+    setUploading(true);
     try {
-      setMessage("Uploading...");
-      const response = await axios.post("http://localhost:5555/api/patient/upload/bloodpressure", formData, {
+      await axios.post("http://localhost:5555/api/patient/upload/bloodpressure", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-      setMessage(`PDF processed successfully: ${JSON.stringify(response.data.message)}`);
-      window.location.reload();
-    } catch (error) {
-      setMessage(`Error: ${error.message}`);
+      setToast({ type: "success", msg: "PDF processed successfully." });
+      setFile(null);
+      window.dispatchEvent(new CustomEvent("report:updated", { detail: { type: "bloodpressure" } }));
+    } catch {
+      setToast({ type: "error", msg: "Upload failed." });
+    } finally {
+      setUploading(false);
+      clearToastLater();
     }
   };
 
+  const nowStr = new Date().toLocaleDateString();
+
   return (
-    <div
-      className="min-h-screen w-full relative"
-      style={{
-        backgroundImage: `url(${img1})`,
-        backgroundAttachment: "fixed",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      {/* Lighter, more transparent gradient overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "linear-gradient(135deg, rgba(13, 148, 136, 0.12) 0%, rgba(59, 130, 246, 0.10) 50%, rgba(99, 102, 241, 0.13) 100%)",
-          backdropFilter: "blur(3px)",
-          zIndex: 1,
-        }}
-      ></div>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex-col">
+      <div className="bg-white p-6 rounded-2xl shadow-lg w-[28rem]">
+        <h2 className="text-xl font-bold text-center text-gray-800 mb-1">Blood Pressure</h2>
+        <p className="text-center text-gray-500 text-sm">Date: {nowStr}</p>
 
-      <div className="relative z-10 w-full max-w-2xl mx-auto py-8 px-4">
-        {/* Header Section */}
-        <div className="text-center mb-8">
-          {/* Top image removed */}
-         <h1 className="text-4xl font-bold text-teal-500 mb-2 drop-shadow-lg">Blood Pressure Monitor</h1>
-
-          <p className="text-lg text-gray-700 bg-white/70 px-4 py-2 rounded-full inline-block shadow-sm">
-            📅 {new Date().toLocaleDateString()}
-          </p>
+        {/* Tabs */}
+        <div className="mt-6 grid grid-cols-2 gap-2">
+          <button
+            aria-pressed={activeTab === "manual"}
+            className={`px-4 py-2 text-sm rounded-md w-full text-center transition ${
+              activeTab === "manual" ? "bg-teal-500 text-white" : "bg-gray-200 text-gray-700"
+            }`}
+            onClick={() => setActiveTab("manual")}
+          >
+            Manual Entry
+          </button>
+          <button
+            aria-pressed={activeTab === "pdf"}
+            className={`px-4 py-2 text-sm rounded-md w-full text-center transition ${
+              activeTab === "pdf" ? "bg-teal-500 text-white" : "bg-gray-200 text-gray-700"
+            }`}
+            onClick={() => setActiveTab("pdf")}
+          >
+            Upload PDF
+          </button>
         </div>
 
-        {/* Main Card */}
-        <div className="bg-white/90 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-white/20">
-          {/* Tabs */}
-          <div className="flex mb-8 bg-gray-100 rounded-2xl p-1">
-            <button
-              className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
-                activeTab === "manual"
-                  ? "bg-teal-500 text-white shadow-lg transform scale-105"
-                  : "text-gray-600 hover:text-teal-600 hover:bg-white/50"
-              }`}
-              onClick={() => {
-                setActiveTab("manual");
-                setMessage("");
-                setSystolic("");
-                setDiastolic("");
-                setPulse("");
-                setFile(null);
-              }}
-            >
-              📝 Manual Entry
-            </button>
-            <button
-              className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
-                activeTab === "pdf"
-                  ? "bg-teal-500 text-white shadow-lg transform scale-105"
-                  : "text-gray-600 hover:text-teal-600 hover:bg-white/50"
-              }`}
-              onClick={() => {
-                setActiveTab("pdf");
-                setMessage("");
-                setSystolic("");
-                setDiastolic("");
-                setPulse("");
-                setFile(null);
-              }}
-            >
-              📄 Upload PDF
-            </button>
-          </div>
+        <div className="mt-4">
+          <img src={img1} alt="blood pressure" className="mx-auto w-20" />
+        </div>
 
-          {/* Manual Entry Form */}
-          {activeTab === "manual" && (
-            <form onSubmit={handleManualSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="space-y-2">
-                  <label className="text-gray-700 font-semibold block">
-                    Systolic (mmHg)
-                  </label>
-                  <input
-                    type="number"
-                    value={systolic}
-                    onChange={(e) => setSystolic(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-teal-200 focus:border-teal-500 transition-all duration-300 bg-white/80 text-lg font-medium"
-                    placeholder="120"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-gray-700 font-semibold block">
-                    Diastolic (mmHg)
-                  </label>
-                  <input
-                    type="number"
-                    value={diastolic}
-                    onChange={(e) => setDiastolic(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-teal-200 focus:border-teal-500 transition-all duration-300 bg-white/80 text-lg font-medium"
-                    placeholder="80"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-gray-700 font-semibold block">
-                    Pulse (BPM)
-                  </label>
-                  <input
-                    type="number"
-                    value={pulse}
-                    onChange={(e) => setPulse(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-teal-200 focus:border-teal-500 transition-all duration-300 bg-white/80 text-lg font-medium"
-                    placeholder="72"
-                  />
-                </div>
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:from-teal-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                💾 Save Blood Pressure Data
-              </button>
-            </form>
-          )}
-
-          {/* PDF Upload Form */}
-          {activeTab === "pdf" && (
-            <div className="space-y-6 text-center">
-              <div className="border-2 border-dashed border-teal-300 rounded-2xl p-8 bg-teal-50/50 hover:bg-teal-50/80 transition-all duration-300">
-                <div className="mb-4">
-                  <div className="w-16 h-16 mx-auto bg-teal-100 rounded-full flex items-center justify-center mb-4">
-                    <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">Upload Blood Pressure Report</h3>
-                  <p className="text-gray-600">Select a PDF file containing your blood pressure readings</p>
-                </div>
+        {/* Manual form */}
+        {activeTab === "manual" && (
+          <form onSubmit={handleManualSubmit} className="mt-4 space-y-4" noValidate>
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label htmlFor="systolic" className="block text-sm font-medium text-gray-700">
+                  Systolic (mmHg)
+                </label>
                 <input
-                  type="file"
-                  accept="application/pdf"
-                  onChange={handleFileChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-teal-200 focus:border-teal-500 transition-all duration-300 bg-white/80 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                  id="systolic"
+                  type="number"
+                  inputMode="numeric"
+                  min={60}
+                  max={260}
+                  value={systolic}
+                  onChange={(e) => setSystolic(e.target.value)}
+                  className="mt-2 p-2 w-full border border-gray-300 rounded-md h-10 appearance-none [-moz-appearance:textfield]"
+                  placeholder="120"
+                  required
                 />
               </div>
-              <button
-                onClick={handleFileUpload}
-                className="w-full bg-gradient-to-r from-blue-500 to-teal-600 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-600 hover:to-teal-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                📤 Upload PDF Report
-              </button>
+              <div>
+                <label htmlFor="diastolic" className="block text-sm font-medium text-gray-700">
+                  Diastolic(mmHg)
+                </label>
+                <input
+                  id="diastolic"
+                  type="number"
+                  inputMode="numeric"
+                  min={40}
+                  max={160}
+                  value={diastolic}
+                  onChange={(e) => setDiastolic(e.target.value)}
+                  className="mt-2 p-2 w-full border border-gray-300 rounded-md h-10 appearance-none [-moz-appearance:textfield]"
+                  placeholder="80"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="pulse" className="block text-sm font-medium text-gray-700">
+                  Pulse (BPM)
+                </label>
+                <input
+                  id="pulse"
+                  type="number"
+                  inputMode="numeric"
+                  min={30}
+                  max={220}
+                  value={pulse}
+                  onChange={(e) => setPulse(e.target.value)}
+                  className="mt-2 p-2 w-full border border-gray-300 rounded-md h-10 appearance-none [-moz-appearance:textfield]"
+                  placeholder="72"
+                  required
+                />
+              </div>
             </div>
-          )}
 
-          {/* Message Display */}
-          {message && (
-            <div className={`mt-6 p-4 rounded-xl text-center font-medium ${
-              message.includes("Error") || message.includes("Please select")
-                ? "bg-red-50 text-red-700 border border-red-200"
-                : message.includes("Uploading")
-                ? "bg-yellow-50 text-yellow-700 border border-yellow-200"
-                : "bg-green-50 text-green-700 border border-green-200"
-            }`}>
-              {message.includes("Error") ? "❌ " : message.includes("Uploading") ? "⏳ " : "✅ "}
-              {message}
-            </div>
-          )}
-        </div>
+            {/* classification */}
+            {bpClassification && (
+              <div className="mt-1">
+                <StatusPill label={bpClassification} />
+                <p className="mt-2 text-xs text-gray-500">Guidance: {legendText}</p>
+              </div>
+            )}
 
-        {/* Reports Section */}
-        <div className="mt-8">
-          <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-            <div className="bg-gradient-to-r from-teal-500 to-blue-600 text-white p-6">
-              <h2 className="text-2xl font-bold text-center">📊 Your Blood Pressure History</h2>
-            </div>
-            <div className="p-6">
-              <PatientReportList patientId={userId.id} reportType={"bloodpressure"} />
-            </div>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="mt-2 bg-teal-500 text-white py-2 rounded-md w-full flex items-center justify-center disabled:opacity-60"
+            >
+              {submitting && (
+                <span className="mr-2 h-4 w-4 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />
+              )}
+              Save
+            </button>
+          </form>
+        )}
+
+        {/* PDF upload */}
+        {activeTab === "pdf" && (
+          <div className="mt-4 space-y-3">
+            <label className="text-gray-600 block text-sm">Upload PDF</label>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handleFileChange}
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+            />
+            {file && (
+              <p className="text-xs text-gray-500">
+                Selected: {file.name} ({Math.ceil(file.size / 1024)} KB)
+              </p>
+            )}
+            <button
+              onClick={handleFileUpload}
+              disabled={uploading}
+              className="w-full bg-teal-500 text-white py-2 rounded-lg flex items-center justify-center disabled:opacity-60"
+            >
+              {uploading && (
+                <span className="mr-2 h-4 w-4 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />
+              )}
+              Upload
+            </button>
           </div>
-        </div>
+        )}
+
+        {/* Toast */}
+        {toast.msg && (
+          <div
+            role="status"
+            className={`mt-4 rounded-md border p-3 text-sm ${
+              toast.type === "success"
+                ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                : toast.type === "error"
+                ? "bg-rose-50 border-rose-200 text-rose-700"
+                : "bg-sky-50 border-sky-200 text-sky-700"
+            }`}
+          >
+            {toast.msg}
+          </div>
+        )}
       </div>
-      <PatientReportList patientId={userId.id} reportType={"bloodpressure"} />
+
+      {/* History */}
+      {userId && (
+        <div className="mt-6 w-full max-w-3xl">
+          <PatientReportList patientId={userId} reportType={"bloodpressure"} />
+        </div>
+      )}
     </div>
   );
-};
-
-export default BloodPressure;
+}

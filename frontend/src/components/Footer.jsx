@@ -22,7 +22,7 @@ const Footer = () => {
           <h1 className=" font-medium text-xl pb-4 pt-5 md:pt-0">Services</h1>
           <nav className=" flex flex-col gap-2">
             <Link
-              to="healthtracker"
+              to="services"
               spy={true}
               smooth={true}
               duration={500}

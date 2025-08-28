@@ -6,7 +6,7 @@ import Register from "./pages/Register"
 import Welcome from "./pages/Welcome";
 import UserLogin from "./pages/UserLogin";
 import UserRegister from "./pages/UserRegister";
-
+import ChatPage from "./pages/chatPage";
 import BloodPressure from "./pages/BloodPressure";
 import BloodSugar from "./pages/BloodSugar";
 import FBC from "./pages/FBC";
@@ -21,6 +21,7 @@ import CalorieCalculator from "./pages/CalorieCalculator";
 import ViewPatientReports from "./pages/viewPatientReports";
 import ViewReports from "./pages/ViewReports";
 import SmartCalorieCounter from "./pages/SmartCalorieCounter";
+import DoctorChatPage from "./pages/DoctorChatPage"
 
 
 const App = () => {
@@ -48,6 +49,11 @@ const App = () => {
       <Route path='/reports' element={<ViewPatientReports/>}/>
       <Route path= '/view' element={<ViewReports/>}/>
       <Route path='/smartcaloriecounter' element={<SmartCalorieCounter/>}/>
+      <Route path="/chat" element={<ChatPage/>} />
+      <Route path="/doctor-chat" element={<DoctorChatPage />} /> {/* doctor */}
+
+
+
 
 
 

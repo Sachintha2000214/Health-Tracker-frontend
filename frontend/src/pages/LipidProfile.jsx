@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 import img1 from "../assets/img/lipidprofile.png";
 import PatientReportList from "../components/PastReportsList";
@@ -82,12 +81,6 @@ const LipidProfile = () => {
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col">
       <div
         className="bg-white p-6 rounded-xl shadow-lg w-96 relative"
-        style={{
-          backgroundImage: `url(${img1})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
       >
         {/* Semi-transparent overlay for readability */}
         <div
