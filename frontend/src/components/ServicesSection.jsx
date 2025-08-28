@@ -29,14 +29,14 @@ const ServicesSection = () => {
             title: "Meal Tracker",
             description:
               "Learn your diet and track meal information using our application to live a healthier life.",
-            button: "Click Here",
+            button: "Next",
             img: img1,
           },
           {
             title: "Health Tracker",
             description:
               "Get in touch with your family doctor for consultations and medical advice anytime.",
-            button: "Click Here",
+            button: "Next",
             img: img2,
           },
         ]);
@@ -61,7 +61,7 @@ const ServicesSection = () => {
   return (
     <div id="services" className="bg-neutralBackground py-12 px-4">
       <h2 className="text-center text-3xl md:text-4xl font-bold text-darkColor mb-8">
-         <span className="text-teal-500">Our Services</span> 
+        Our <span className="text-teal-500">Main Services</span> Categories
       </h2>
      <div
   className={`${
