@@ -114,6 +114,7 @@ export default function BloodPressure() {
       setPulse("");
 
       // Notify siblings (e.g., PastReportsList) if they listen for it
+      window.location.reload();
       window.dispatchEvent(new CustomEvent("report:updated", { detail: { type: "bloodpressure" } }));
     } catch {
       setToast({ type: "error", msg: "Error saving data." });
@@ -165,7 +166,8 @@ export default function BloodPressure() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setToast({ type: "success", msg: "PDF processed successfully." });
-      setFile(null);
+      setFile(null);            
+      window.location.reload();
       window.dispatchEvent(new CustomEvent("report:updated", { detail: { type: "bloodpressure" } }));
     } catch {
       setToast({ type: "error", msg: "Upload failed." });
