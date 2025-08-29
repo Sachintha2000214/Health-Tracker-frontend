@@ -139,6 +139,7 @@ export default function BloodSugar() {
 
       setToast({ type: "success", msg: "Saved successfully!" });
       setValue("");
+      window.location.reload();
       // Optional: notify sibling components to refetch
       window.dispatchEvent(new CustomEvent("report:updated", { detail: { type: "bloodsugar" } }));
     } catch (error) {
@@ -192,6 +193,7 @@ export default function BloodSugar() {
       });
       setToast({ type: "success", msg: "PDF processed successfully." });
       setFile(null);
+      window.location.reload();
       window.dispatchEvent(new CustomEvent("report:updated", { detail: { type: "bloodsugar" } }));
     } catch (error) {
       setToast({ type: "error", msg: "Upload failed." });
