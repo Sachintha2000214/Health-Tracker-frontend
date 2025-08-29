@@ -37,6 +37,7 @@ const Login = () => {
         sessionStorage.setItem("user", JSON.stringify(result.doctor));
         navigate("/docdashboard");
       } else {
+        alert(result.error);
         console.error("Error:", result.error);
       }
     } catch (error) {

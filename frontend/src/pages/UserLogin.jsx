@@ -48,6 +48,7 @@ const UserLogin = () => {
         // Navigate to the home page
         navigate("/home");
       } else {
+        alert(result.error);
         console.error("Login failed:", result.error);
       }
     } catch (error) {
