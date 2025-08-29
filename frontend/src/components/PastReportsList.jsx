@@ -26,7 +26,7 @@ const PatientReportList = ({ patientId, reportType }) => {
     if (!endpoint) return;
 
     axios
-      .get(`http://health-tracker-backend-s5ei.vercel.app//api/patient${endpoint}${patientId}`)
+      .get(`http://localhost:5555/api/patient${endpoint}${patientId}`)
       .then((res) => {
         setData(res.data);
       })
