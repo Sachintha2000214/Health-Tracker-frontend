@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const socket = io("https://health-tracker-backend-s5ei.vercel.app");
+const socket = io("https://health-tracker-backend-s5ei-umr8y997a.vercel.app/");
 
-const API_BASE = "https://health-tracker-backend-s5ei.vercel.app/api/chat"; // ✅ backend base URL
+const API_BASE = "https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/chat"; // ✅ backend base URL
 
 const ChatPage = () => {
   const location = useLocation();
