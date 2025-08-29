@@ -26,7 +26,7 @@ const FBC = () => {
     const docId = localStorage.getItem("selectedDoctorId");
 
     try {
-      await axios.post("https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/fbc", {
+      await axios.post("https://health-tracker-backend-s5ei.vercel.app//api/patient/fbc", {
         userId,
         docId,
         rbc,
@@ -66,7 +66,7 @@ const FBC = () => {
     try {
       setMessage("Uploading...");
       const response = await axios.post(
-        "https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/upload/fbc",
+        "https://health-tracker-backend-s5ei.vercel.app//api/patient/upload/fbc",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

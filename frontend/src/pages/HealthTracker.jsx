@@ -25,7 +25,7 @@ const HealthTracker = () => {
 
     const fetchDoctors = async () => {
       try {
-        const response = await fetch("https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/doctor/getalldoctors");
+        const response = await fetch("https://health-tracker-backend-s5ei.vercel.app//api/doctor/getalldoctors");
         if (!response.ok) throw new Error("Failed to fetch doctors");
         const data = await response.json();
 

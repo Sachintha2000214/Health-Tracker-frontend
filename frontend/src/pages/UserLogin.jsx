@@ -28,7 +28,7 @@ const UserLogin = () => {
     const { email, password } = formData; // Extract email and password from formData
   
     try {
-      const response = await fetch("https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/login", {
+      const response = await fetch("https://health-tracker-backend-s5ei.vercel.app//api/patient/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

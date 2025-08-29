@@ -81,16 +81,16 @@ const ViewReports = () => {
       // 🔁 Set endpoint according to report type
       switch (reportType) {
         case "Blood Pressure":
-          url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/getbloodpressurebydoc/${storedUser.doctornumber}`;
+          url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/getbloodpressurebydoc/${storedUser.doctornumber}`;
           break;
         case "Blood Sugar":
-          url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/getbloodsugarbydoc/${storedUser.doctornumber}`;
+          url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/getbloodsugarbydoc/${storedUser.doctornumber}`;
           break;
         case "Lipid Profile":
-          url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/getlipidbydoc/${storedUser.doctornumber}`;
+          url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/getlipidbydoc/${storedUser.doctornumber}`;
           break;
         case "FBC":
-          url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/getfbcbydoc/${storedUser.doctornumber}`;
+          url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/getfbcbydoc/${storedUser.doctornumber}`;
           break;
         default:
           console.warn("Unknown report type");
@@ -115,22 +115,22 @@ const ViewReports = () => {
 
     switch (type) {
       case "Blood Pressure":
-        url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/getbloodpressurebypatient/${patientId}`;
+        url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/getbloodpressurebypatient/${patientId}`;
         columns = bpColumns;
         title = "Blood Pressure History";
         break;
       case "Blood Sugar":
-        url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/getbloodsugarbypatient/${patientId}`;
+        url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/getbloodsugarbypatient/${patientId}`;
         columns = sugarColumns;
         title = "Blood Sugar History";
         break;
       case "FBC":
-        url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/getfbcbypatient/${patientId}`;
+        url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/getfbcbypatient/${patientId}`;
         columns = fbcColumns;
         title = "FBC History";
         break;
       case "Lipid Profile":
-        url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/getlipidbypatient/${patientId}`;
+        url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/getlipidbypatient/${patientId}`;
         columns = lipidColumns;
         title = "Lipid Profile History";
         break;
@@ -160,16 +160,16 @@ const ViewReports = () => {
     // Match backend routes per type
     switch (type) {
       case "Blood Pressure":
-        url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/updatecomment/${docId}`;
+        url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/updatecomment/${docId}`;
         break;
       case "Blood Sugar":
-        url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/updatebloodsugarcomment/${docId}`;
+        url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/updatebloodsugarcomment/${docId}`;
         break;
       case "FBC":
-        url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/updatefbccomment/${docId}`;
+        url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/updatefbccomment/${docId}`;
         break;
       case "Lipid Profile":
-        url = `https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/updatelipidcomment/${docId}`;
+        url = `https://health-tracker-backend-s5ei.vercel.app//api/patient/updatelipidcomment/${docId}`;
         break;
       default:
         return;

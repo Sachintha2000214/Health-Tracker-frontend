@@ -100,7 +100,7 @@ export default function BloodPressure() {
 
     setSubmitting(true);
     try {
-      await axios.post("https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/bloodpressure", {
+      await axios.post("https://health-tracker-backend-s5ei.vercel.app//api/patient/bloodpressure", {
         systolic: s,
         diastolic: d,
         pulse: p,
@@ -161,7 +161,7 @@ export default function BloodPressure() {
 
     setUploading(true);
     try {
-      await axios.post("https://health-tracker-backend-s5ei-umr8y997a.vercel.app//api/patient/upload/bloodpressure", formData, {
+      await axios.post("https://health-tracker-backend-s5ei.vercel.app//api/patient/upload/bloodpressure", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setToast({ type: "success", msg: "PDF processed successfully." });
