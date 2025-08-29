@@ -53,7 +53,7 @@ export default function BloodPressure() {
   }, [systolic, diastolic]);
 
   const legendText =
-    "Normal <120/<80 · Elevated 120–129 & <80 · Stage 1 130–139 or 80–89 · Stage 2 ≥140 or ≥90 · Crisis ≥180 or ≥120";
+    "Normal <120/<80· Elevated 120–129 & <80 · Stage 1 130–139 or 80–89 · Stage 2 ≥140 or ≥90 · Crisis ≥180 or ≥120";
 
   const StatusPill = ({ label }) => {
     const color =
