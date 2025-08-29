@@ -53,7 +53,7 @@ export default function BloodPressure() {
   }, [systolic, diastolic]);
 
   const legendText =
-    "Normal <120/<80 · Elevated 120–129 & <80 · Stage 1 130–139 or 80–89 · Stage 2 ≥140 or ≥90 · Crisis ≥180 or ≥120";
+    "Normal <120/<80· Elevated 120–129 & <80 · Stage 1 130–139 or 80–89 · Stage 2 ≥140 or ≥90 · Crisis ≥180 or ≥120";
 
   const StatusPill = ({ label }) => {
     const color =
@@ -114,6 +114,7 @@ export default function BloodPressure() {
       setPulse("");
 
       // Notify siblings (e.g., PastReportsList) if they listen for it
+      window.location.reload();
       window.dispatchEvent(new CustomEvent("report:updated", { detail: { type: "bloodpressure" } }));
     } catch {
       setToast({ type: "error", msg: "Error saving data." });
@@ -165,7 +166,8 @@ export default function BloodPressure() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setToast({ type: "success", msg: "PDF processed successfully." });
-      setFile(null);
+      setFile(null);            
+      window.location.reload();
       window.dispatchEvent(new CustomEvent("report:updated", { detail: { type: "bloodpressure" } }));
     } catch {
       setToast({ type: "error", msg: "Upload failed." });

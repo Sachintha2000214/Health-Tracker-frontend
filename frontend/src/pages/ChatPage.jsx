@@ -124,7 +124,7 @@ const handleSend = async () => {
       {/* Header */}
       <div className="bg-teal-600 text-white p-4 shadow flex items-center justify-between">
         <div className="font-semibold text-lg">
-          Chat with {doctorName} {doctorNumber ? `( #${doctorNumber} )` : ""}
+          Chat with Doctor
         </div>
       </div>
 

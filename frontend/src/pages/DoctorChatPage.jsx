@@ -201,7 +201,7 @@ const DoctorChatPage = () => {
               <option value="">{patients.length ? "Select patient…" : "No patients found"}</option>
               {patients.map((p) => (
                 <option key={p.patientId} value={p.patientId}>
-                  {p.name} ({p.patientId})
+                  {p.name}
                 </option>
               ))}
             </select>
