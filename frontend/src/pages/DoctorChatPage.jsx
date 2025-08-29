@@ -4,12 +4,11 @@ import axios from "axios";
 import { ensureNotificationPermission, notifyNewMessage } from "../utils/notify";
 import { io } from "socket.io-client";
 
-const socket = io("https://health-tracker-backend-s5ei.vercel.app/");
+const socket = io("http://localhost:5555/");
 
-const API_BASE = "https://health-tracker-backend-s5ei.vercel.app/api/chat"; // ✅ your backend API
+const API_BASE = "http://localhost:5555/api/chat";
 
 const DoctorChatPage = () => {
-  // Doctor session
   const me = (() => {
     try { return JSON.parse(sessionStorage.getItem("user")); } catch { return null; }
   })();
@@ -25,29 +24,28 @@ const DoctorChatPage = () => {
   const [draft, setDraft] = useState("");
   const chatEndRef = useRef(null);
 
-  // Notifications
   useEffect(() => { ensureNotificationPermission(); }, []);
 
+  // Listen for messages
   useEffect(() => {
-  // Listen for messages from server
-  socket.on("receiveMessage", (msg) => {
-    setMessages((prev) => [...prev, msg]);
-  });
+    socket.on("receiveMessage", (msg) => {
+      // Ensure timestamp exists
+      const messageWithTs = { ...msg, ts: msg.ts || msg.timestamp || new Date().toISOString() };
+      setMessages((prev) => [...prev, messageWithTs]);
+    });
 
-  return () => {
-    socket.off("receiveMessage");
-  };
-}, []);
+    return () => { socket.off("receiveMessage"); };
+  }, []);
 
-  // Fetch patients from reports (you already had this)
+  // Fetch patients
   useEffect(() => {
     if (!doctorNumber) return;
 
     const endpoints = [
-      `https://health-tracker-backend-s5ei.vercel.app/api/patient/getbloodpressurebydoc/${doctorNumber}`,
-      `https://health-tracker-backend-s5ei.vercel.app/api/patient/getbloodsugarbydoc/${doctorNumber}`,
-      `https://health-tracker-backend-s5ei.vercel.app/api/patient/getlipidbydoc/${doctorNumber}`,
-      `https://health-tracker-backend-s5ei.vercel.app/api/patient/getfbcbydoc/${doctorNumber}`,
+      `http://localhost:5555/api/patient/getbloodpressurebydoc/${doctorNumber}`,
+      `http://localhost:5555/api/patient/getbloodsugarbydoc/${doctorNumber}`,
+      `http://localhost:5555/api/patient/getlipidbydoc/${doctorNumber}`,
+      `http://localhost:5555/api/patient/getfbcbydoc/${doctorNumber}`,
     ];
 
     const fetchAll = async () => {
@@ -66,7 +64,7 @@ const DoctorChatPage = () => {
       const list = Array.from(ids).map((id) => ({ patientId: id, name: `Patient ${id}` }));
       setPatients(list);
 
-      // preselect patient if available
+      // preselect
       const params = new URLSearchParams(window.location.search);
       const fromUrl = params.get("patientId");
       const fromLocal = localStorage.getItem("doctorChat.preselectPatientId");
@@ -83,7 +81,7 @@ const DoctorChatPage = () => {
     fetchAll();
   }, [doctorNumber]);
 
-  // Fetch chat history when patient is selected
+  // Fetch chat history
   useEffect(() => {
     if (!doctorNumber || !selectedPatientId) return;
 
@@ -94,10 +92,13 @@ const DoctorChatPage = () => {
         );
         const data = await res.json();
         if (data.success) {
-          setMessages(data.messages || []);
-        } else {
-          setMessages([]);
-        }
+          // Ensure all messages have a timestamp
+          const msgs = (data.messages || []).map((m) => ({
+            ...m,
+            ts: m.ts || m.timestamp || new Date().toISOString()
+          }));
+          setMessages(msgs);
+        } else setMessages([]);
       } catch (err) {
         console.error("Error fetching history:", err);
       }
@@ -109,7 +110,7 @@ const DoctorChatPage = () => {
   // Auto scroll
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
-  // 🔔 Notify when patient sends message
+  // Notifications
   const prevLenRef = useRef(0);
   useEffect(() => {
     const len = messages.length;
@@ -117,7 +118,6 @@ const DoctorChatPage = () => {
       const last = messages[len - 1];
       const isIncoming = last?.senderType === "patient" || last?.sender === "patient";
       const tabInBackground = document.hidden || !document.hasFocus();
-
       if (isIncoming && tabInBackground) {
         notifyNewMessage({
           title: `New message from ${selectedPatientName || "patient"}`,
@@ -129,12 +129,14 @@ const DoctorChatPage = () => {
     prevLenRef.current = len;
   }, [messages, selectedPatientName, doctorNumber, selectedPatientId]);
 
-  const fmtDateTime = (t) =>
-    new Date(t).toLocaleDateString("en-GB") +
-    " " +
-    new Date(t).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const fmtDateTime = (t) => {
+    if (!t) return "--:--";
+    const dt = new Date(t);
+    if (isNaN(dt)) return "--:--";
+    return dt.toLocaleDateString("en-GB") + " " +
+           dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
 
-  // Send message via backend
   const handleSend = async () => {
     const text = draft.trim();
     if (!text || !selectedPatientId) return;
@@ -145,6 +147,7 @@ const DoctorChatPage = () => {
       receiverId: selectedPatientId,
       receiverType: "patient",
       message: text,
+      ts: new Date().toISOString(), // ✅ add timestamp immediately
     };
 
     try {
@@ -153,12 +156,12 @@ const DoctorChatPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-       socket.emit("sendMessage", payload);
-    console.log("Emitted socket message:", payload);
 
-    // 3. Optimistically add to UI
-    setMessages((prev) => [...prev, { ...payload, sender: "doctor" }]);
-    setDraft("");
+      socket.emit("sendMessage", payload);
+
+      // Optimistic UI update
+      setMessages((prev) => [...prev, payload]);
+      setDraft("");
     } catch (err) {
       console.error("Error sending:", err);
     }
@@ -177,7 +180,9 @@ const DoctorChatPage = () => {
       <div className="flex items-center justify-center h-screen text-center p-6">
         <div className="bg-white shadow rounded-xl p-6">
           <div className="text-xl font-semibold text-red-600">No doctor session found</div>
-          <div className="text-gray-600 mt-2">Ensure <code>sessionStorage("user")</code> exists with <code>doctornumber</code>.</div>
+          <div className="text-gray-600 mt-2">
+            Ensure <code>sessionStorage("user")</code> exists with <code>doctornumber</code>.
+          </div>
         </div>
       </div>
     );
@@ -191,7 +196,6 @@ const DoctorChatPage = () => {
           <div className="font-semibold text-lg">
             Doctor Chat — {doctorName} {doctorNumber ? `( #${doctorNumber} )` : ""}
           </div>
-
           <div className="flex items-center gap-2">
             <select
               className="bg-white text-gray-800 rounded-lg px-3 py-2"
@@ -200,9 +204,7 @@ const DoctorChatPage = () => {
             >
               <option value="">{patients.length ? "Select patient…" : "No patients found"}</option>
               {patients.map((p) => (
-                <option key={p.patientId} value={p.patientId}>
-                  {p.name}
-                </option>
+                <option key={p.patientId} value={p.patientId}>{p.name}</option>
               ))}
             </select>
           </div>
@@ -226,10 +228,7 @@ const DoctorChatPage = () => {
             const mine = (m.sender || m.senderType) === "doctor";
             return (
               <div key={m.id || i} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={`max-w-[75%] rounded-2xl px-4 py-2 shadow
-                  ${mine ? "bg-teal-500 text-white" : "bg-white border text-gray-800"}`}
-                >
+                <div className={`max-w-[75%] rounded-2xl px-4 py-2 shadow ${mine ? "bg-teal-500 text-white" : "bg-white border text-gray-800"}`}>
                   <div className="text-xs opacity-75 mb-1">
                     {mine ? `Dr. ${doctorName}` : selectedPatientName}
                   </div>
@@ -258,11 +257,7 @@ const DoctorChatPage = () => {
         <button
           onClick={handleSend}
           disabled={!selectedPatientId || !draft.trim()}
-          className={`px-4 py-2 rounded-lg transition ${
-            !selectedPatientId || !draft.trim()
-              ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-              : "bg-teal-600 text-white hover:bg-teal-700"
-          }`}
+          className={`px-4 py-2 rounded-lg transition ${!selectedPatientId || !draft.trim() ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-teal-600 text-white hover:bg-teal-700"}`}
         >
           Send
         </button>
