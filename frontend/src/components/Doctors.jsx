@@ -22,7 +22,7 @@ const Doctors = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await fetch('https://health-tracker-backend-s5ei.vercel.app//api/doctor/getalldoctors');
+        const response = await fetch('https://health-tracker-backend-s5ei.vercel.app/api/doctor/getalldoctors');
         if (!response.ok) {
           throw new Error('Failed to fetch doctors');
         }

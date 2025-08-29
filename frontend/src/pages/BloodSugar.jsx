@@ -130,7 +130,7 @@ export default function BloodSugar() {
 
     setSubmitting(true);
     try {
-      await axios.post("https://health-tracker-backend-s5ei.vercel.app//api/patient/bloodsugar", {
+      await axios.post("https://health-tracker-backend-s5ei.vercel.app/api/patient/bloodsugar", {
         userId,
         docId,
         type: testType,
@@ -187,7 +187,7 @@ export default function BloodSugar() {
 
     setUploading(true);
     try {
-      await axios.post("https://health-tracker-backend-s5ei.vercel.app//api/patient/upload/bloodsugar", formData, {
+      await axios.post("https://health-tracker-backend-s5ei.vercel.app/api/patient/upload/bloodsugar", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setToast({ type: "success", msg: "PDF processed successfully." });

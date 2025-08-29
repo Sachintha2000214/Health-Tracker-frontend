@@ -6,7 +6,7 @@ import { io } from "socket.io-client";
 
 const socket = io("https://health-tracker-backend-s5ei.vercel.app/");
 
-const API_BASE = "https://health-tracker-backend-s5ei.vercel.app//api/chat"; // ✅ your backend API
+const API_BASE = "https://health-tracker-backend-s5ei.vercel.app/api/chat"; // ✅ your backend API
 
 const DoctorChatPage = () => {
   // Doctor session
@@ -44,10 +44,10 @@ const DoctorChatPage = () => {
     if (!doctorNumber) return;
 
     const endpoints = [
-      `https://health-tracker-backend-s5ei.vercel.app//api/patient/getbloodpressurebydoc/${doctorNumber}`,
-      `https://health-tracker-backend-s5ei.vercel.app//api/patient/getbloodsugarbydoc/${doctorNumber}`,
-      `https://health-tracker-backend-s5ei.vercel.app//api/patient/getlipidbydoc/${doctorNumber}`,
-      `https://health-tracker-backend-s5ei.vercel.app//api/patient/getfbcbydoc/${doctorNumber}`,
+      `https://health-tracker-backend-s5ei.vercel.app/api/patient/getbloodpressurebydoc/${doctorNumber}`,
+      `https://health-tracker-backend-s5ei.vercel.app/api/patient/getbloodsugarbydoc/${doctorNumber}`,
+      `https://health-tracker-backend-s5ei.vercel.app/api/patient/getlipidbydoc/${doctorNumber}`,
+      `https://health-tracker-backend-s5ei.vercel.app/api/patient/getfbcbydoc/${doctorNumber}`,
     ];
 
     const fetchAll = async () => {
