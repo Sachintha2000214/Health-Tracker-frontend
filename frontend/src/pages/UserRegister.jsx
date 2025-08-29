@@ -22,7 +22,7 @@ const UserRegister = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5555/api/patient/signup", formData);
+      const response = await axios.post("http://health-tracker-backend-s5ei.vercel.app/api/patient/signup", formData);
       console.log("User registered successfully:", response.data);
       navigate("/userlogin");
     } catch (error) {

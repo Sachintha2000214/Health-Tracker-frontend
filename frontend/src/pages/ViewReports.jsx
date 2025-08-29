@@ -81,16 +81,16 @@ const ViewReports = () => {
       // 🔁 Set endpoint according to report type
       switch (reportType) {
         case "Blood Pressure":
-          url = `http://localhost:5555/api/patient/getbloodpressurebydoc/${storedUser.doctornumber}`;
+          url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/getbloodpressurebydoc/${storedUser.doctornumber}`;
           break;
         case "Blood Sugar":
-          url = `http://localhost:5555/api/patient/getbloodsugarbydoc/${storedUser.doctornumber}`;
+          url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/getbloodsugarbydoc/${storedUser.doctornumber}`;
           break;
         case "Lipid Profile":
-          url = `http://localhost:5555/api/patient/getlipidbydoc/${storedUser.doctornumber}`;
+          url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/getlipidbydoc/${storedUser.doctornumber}`;
           break;
         case "FBC":
-          url = `http://localhost:5555/api/patient/getfbcbydoc/${storedUser.doctornumber}`;
+          url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/getfbcbydoc/${storedUser.doctornumber}`;
           break;
         default:
           console.warn("Unknown report type");
@@ -115,22 +115,22 @@ const ViewReports = () => {
 
     switch (type) {
       case "Blood Pressure":
-        url = `http://localhost:5555/api/patient/getbloodpressurebypatient/${patientId}`;
+        url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/getbloodpressurebypatient/${patientId}`;
         columns = bpColumns;
         title = "Blood Pressure History";
         break;
       case "Blood Sugar":
-        url = `http://localhost:5555/api/patient/getbloodsugarbypatient/${patientId}`;
+        url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/getbloodsugarbypatient/${patientId}`;
         columns = sugarColumns;
         title = "Blood Sugar History";
         break;
       case "FBC":
-        url = `http://localhost:5555/api/patient/getfbcbypatient/${patientId}`;
+        url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/getfbcbypatient/${patientId}`;
         columns = fbcColumns;
         title = "FBC History";
         break;
       case "Lipid Profile":
-        url = `http://localhost:5555/api/patient/getlipidbypatient/${patientId}`;
+        url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/getlipidbypatient/${patientId}`;
         columns = lipidColumns;
         title = "Lipid Profile History";
         break;
@@ -160,16 +160,16 @@ const ViewReports = () => {
     // Match backend routes per type
     switch (type) {
       case "Blood Pressure":
-        url = `http://localhost:5555/api/patient/updatecomment/${docId}`;
+        url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/updatecomment/${docId}`;
         break;
       case "Blood Sugar":
-        url = `http://localhost:5555/api/patient/updatebloodsugarcomment/${docId}`;
+        url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/updatebloodsugarcomment/${docId}`;
         break;
       case "FBC":
-        url = `http://localhost:5555/api/patient/updatefbccomment/${docId}`;
+        url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/updatefbccomment/${docId}`;
         break;
       case "Lipid Profile":
-        url = `http://localhost:5555/api/patient/updatelipidcomment/${docId}`;
+        url = `http://health-tracker-backend-s5ei.vercel.app/api/patient/updatelipidcomment/${docId}`;
         break;
       default:
         return;

@@ -26,7 +26,7 @@ const LipidProfile = () => {
     const docId = localStorage.getItem("selectedDoctorId");
 
     try {
-      await axios.post("http://localhost:5555/api/patient/lipidprofile", {
+      await axios.post("http://health-tracker-backend-s5ei.vercel.app/api/patient/lipidprofile", {
         userId,
         docId,
         cholesterol,
@@ -63,7 +63,7 @@ const LipidProfile = () => {
     try {
       setMessage("Uploading...");
       const response = await axios.post(
-        "http://localhost:5555/api/patient/upload/lipidprofile",
+        "http://health-tracker-backend-s5ei.vercel.app/api/patient/upload/lipidprofile",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

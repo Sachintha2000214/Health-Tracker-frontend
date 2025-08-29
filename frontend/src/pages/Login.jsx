@@ -21,7 +21,7 @@ const Login = () => {
     const { email, password } = formData;
 
     try {
-      const response = await fetch("http://localhost:5555/api/doctor/login", {
+      const response = await fetch("http://health-tracker-backend-s5ei.vercel.app/api/doctor/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

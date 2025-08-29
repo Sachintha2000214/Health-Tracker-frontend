@@ -23,7 +23,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5555/api/doctor/signup', {
+      const response = await fetch('http://health-tracker-backend-s5ei.vercel.app/api/doctor/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

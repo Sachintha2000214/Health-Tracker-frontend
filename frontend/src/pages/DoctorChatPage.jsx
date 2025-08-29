@@ -4,9 +4,9 @@ import axios from "axios";
 import { ensureNotificationPermission, notifyNewMessage } from "../utils/notify";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5555");
+const socket = io("http://health-tracker-backend-s5ei.vercel.app");
 
-const API_BASE = "http://localhost:5555/api/chat"; // ✅ your backend API
+const API_BASE = "http://health-tracker-backend-s5ei.vercel.app/api/chat"; // ✅ your backend API
 
 const DoctorChatPage = () => {
   // Doctor session
@@ -44,10 +44,10 @@ const DoctorChatPage = () => {
     if (!doctorNumber) return;
 
     const endpoints = [
-      `http://localhost:5555/api/patient/getbloodpressurebydoc/${doctorNumber}`,
-      `http://localhost:5555/api/patient/getbloodsugarbydoc/${doctorNumber}`,
-      `http://localhost:5555/api/patient/getlipidbydoc/${doctorNumber}`,
-      `http://localhost:5555/api/patient/getfbcbydoc/${doctorNumber}`,
+      `http://health-tracker-backend-s5ei.vercel.app/api/patient/getbloodpressurebydoc/${doctorNumber}`,
+      `http://health-tracker-backend-s5ei.vercel.app/api/patient/getbloodsugarbydoc/${doctorNumber}`,
+      `http://health-tracker-backend-s5ei.vercel.app/api/patient/getlipidbydoc/${doctorNumber}`,
+      `http://health-tracker-backend-s5ei.vercel.app/api/patient/getfbcbydoc/${doctorNumber}`,
     ];
 
     const fetchAll = async () => {
